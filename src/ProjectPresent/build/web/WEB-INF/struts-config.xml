@@ -47,7 +47,7 @@
         <action input="/results.jsp" name="EditActionForm" path="/Edit" scope="request" type="mypks.controllers.EditAction" validate="false">
             <forward name="success" path="/updateSurgeryRecord.jsp"/>
         </action>
-        <action input="/updateSurgeryRecord.jsp" name="SurgeryUpdateActionForm" path="/UpdateRecord" scope="request" type="mypks.bean.SurgeryUpdateAction">
+        <action input="/updateSurgeryRecord.jsp" name="SurgeryUpdateActionForm" path="/UpdateRecord" scope="request" type="mypks.bean.UpdateSurgeryAction">
             <forward name="success" path="/employee.jsp" redirect="true"/>
         </action>
         <action path="/NewRecord" type="mypks.controllers.DisplayPatientID">

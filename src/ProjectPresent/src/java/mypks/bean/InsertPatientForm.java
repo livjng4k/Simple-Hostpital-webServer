@@ -1,6 +1,7 @@
 package mypks.bean;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import mypks.dao.WDAO;
 
@@ -85,8 +86,14 @@ public class InsertPatientForm extends org.apache.struts.action.ActionForm {
         if (getName() == null || getName().length() < 1) {
             errors.add("name", new ActionMessage("error.name.required"));
         }
-        if(getDob()==null || getDob().length()<1){
+        if (getDob() == null || getDob().length() < 1) {
             errors.add("dob", new ActionMessage("error.dob.required"));
+        } else {
+            Timestamp ts = Timestamp.valueOf(dob + " 00:00:00");
+            Date date = new Date();
+            if (ts.after(date)) {
+                errors.add("time", new ActionMessage("error.time.invalid"));
+            }
         }
         if (getAddress() == null || getAddress().length() < 1) {
             errors.add("address", new ActionMessage("error.address.required"));
@@ -107,7 +114,7 @@ public class InsertPatientForm extends org.apache.struts.action.ActionForm {
                 errors.add("phone", new ActionMessage("error.phone.wrong"));
             }
         }
-        
+
         return errors;
     }
 }

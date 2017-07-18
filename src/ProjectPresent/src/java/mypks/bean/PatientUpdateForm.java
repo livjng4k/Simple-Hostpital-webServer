@@ -1,6 +1,7 @@
 package mypks.bean;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import mypks.dao.WDAO;
 
@@ -78,11 +79,19 @@ public class PatientUpdateForm extends org.apache.struts.action.ActionForm {
 
     public PatientUpdateForm() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
         ActionErrors errors = new ActionErrors();
+        if (getDob() == null || getDob().length() < 1) {
+            errors.add("dob", new ActionMessage("error.dob.required"));
+        } else {
+            Timestamp ts = Timestamp.valueOf(dob + " 00:00:00");
+            Date date = new Date();
+            if (ts.after(date)) {
+                errors.add("time", new ActionMessage("error.time.invalid"));
+            }
+        }
         if (getName() == null || getName().length() < 1) {
             errors.add("name", new ActionMessage("error.name.required"));
         }

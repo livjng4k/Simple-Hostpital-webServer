@@ -31,7 +31,12 @@
                         <option value="${patient}">${patient}</option>
                     </c:forEach>
                 </select><br/><br/>
-                Status <input type="text" name="status" value=""/><br/><br/>
+                Status 
+                <select name="status">
+                    <option value="On Hold">On Hold</option>
+                    <option value="Done">Done</option>
+                </select>
+                <br/><br/>
                 <input type="submit" value="Insert Record"/>
             </form><br/><br/>
 

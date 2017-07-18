@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package mypks.bean;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,10 +8,6 @@ import mypks.dto.SurgeryRecordDTO;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 
-/**
- *
- * @author VS9 X64Bit
- */
 public class EditActionForm extends org.apache.struts.action.ActionForm {
 
     private String id, patientID;

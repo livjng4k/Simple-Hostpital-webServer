@@ -1,6 +1,7 @@
 package mypks.bean;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.StringTokenizer;
 import javax.servlet.http.HttpServletRequest;
 import mypks.dao.DAO;
@@ -54,6 +55,22 @@ public class SurgeryUpdateActionForm extends org.apache.struts.action.ActionForm
         }
         if (getProcess() == null || getProcess().length() < 1) {
             errors.add("process", new ActionMessage("error.process.required"));
+        }
+        if (getTimeStart() != null && getTimeEnd() != null) {
+            StringTokenizer stk = new StringTokenizer(timeStart, "T");
+            Timestamp start = Timestamp.valueOf(stk.nextToken() + " " + stk.nextToken() + ":00");
+            stk = new StringTokenizer(timeEnd, "T");
+            Timestamp end = Timestamp.valueOf(stk.nextToken() + " " + stk.nextToken() + ":00");
+            Date date = new Date();
+            if(start.after(date)){
+                errors.add("time", new ActionMessage("error.time.invalid"));
+            }
+            if(end.after(date)){
+                errors.add("time", new ActionMessage("error.time.invalid"));
+            }
+            if(start.after(end)){
+                errors.add("time", new ActionMessage("error.time.order"));
+            }
         }
         return errors;
     }

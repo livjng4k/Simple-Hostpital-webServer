@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package mypks.bean;
 
 import java.util.List;
@@ -14,17 +9,13 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 
-/**
- *
- * @author VS9 X64Bit
- */
 public class SearchActionForm extends org.apache.struts.action.ActionForm {
 
     private String search;
 
-    public List<SurgeryRecordDTO> search() {
+    public List<SurgeryRecordDTO> search(String creator) {
         DAO dao = new DAO();
-        return dao.searchLikeName(search);
+        return dao.searchSurgery(search, creator);
     }
 
     public SearchActionForm() {

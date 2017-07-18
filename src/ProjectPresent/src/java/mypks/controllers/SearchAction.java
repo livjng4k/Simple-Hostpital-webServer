@@ -3,6 +3,7 @@ package mypks.controllers;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import mypks.bean.SearchActionForm;
 import mypks.dto.SurgeryRecordDTO;
 import org.apache.struts.action.ActionForm;
@@ -17,8 +18,10 @@ public class SearchAction extends org.apache.struts.action.Action {
     public ActionForward execute(ActionMapping mapping, ActionForm form,
             HttpServletRequest request, HttpServletResponse response)
             throws Exception {
+        HttpSession session = request.getSession(false);
         SearchActionForm bean = (SearchActionForm) form;
-        List<SurgeryRecordDTO> list = bean.search();
+        String creator = (String) session.getAttribute("ID");
+        List<SurgeryRecordDTO> list = bean.search(creator);
         request.setAttribute("resultList", list);
         return mapping.findForward(SUCCESS);
     }

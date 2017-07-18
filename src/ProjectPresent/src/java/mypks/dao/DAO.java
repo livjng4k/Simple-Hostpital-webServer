@@ -18,8 +18,64 @@ public class DAO {
     private Connection conn;
     private PreparedStatement preSt;
     private ResultSet rs;
-    // Patient columms
-    private static final String pname = "PatientName", paddress = "PatientAddr", ppass = "PatientPass";
+
+    private List<String> searchPatientLikeName(String search) {
+        List<String> id = null;
+        try {
+            conn = connections.MyConnection.getConnection();
+            String sql = "select PatientID from Patient where PatientName like ?";
+            preSt = conn.prepareStatement(sql);
+            preSt.setString(1, "%" + search + "%");
+            rs = preSt.executeQuery();
+            id = new ArrayList<>();
+            while (rs.next()) {
+                id.add(rs.getString("PatientID"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeConnections();
+        }
+        return id;
+    }
+
+    public List<SurgeryRecordDTO> searchSurgery(String search, String creator) {
+        List<SurgeryRecordDTO> list = null;
+        List<String> id = searchPatientLikeName(search);
+        if (id.size() > 0) {
+            SurgeryRecordDTO dto;
+            try {
+                conn = connections.MyConnection.getConnection();
+                String sql = "select Surgery_Record_ID,PatientID,SurgeryName from SurgeryReport "
+                        + "where PatientID=? and Creator_Emp=?";
+                preSt = conn.prepareStatement(sql);
+                for (String s : id) {
+                    preSt.setString(1, s);
+                    preSt.setString(2, creator);
+                    rs = preSt.executeQuery();
+                    while (rs.next()) {
+                        if (list == null) {
+                            list = new ArrayList<>();
+                        }
+                        dto = new SurgeryRecordDTO();
+                        dto.setId(rs.getString(1));
+                        dto.setPatientID(rs.getString(2));
+                        dto.setSurgeryName(rs.getString(3));
+                        list.add(dto);
+                    }
+                }
+                for (int i = 0; i < list.size(); i++) {
+                    String name = findPFullname(list.get(i).getPatientID());
+                    list.get(i).setPatientName(name);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                closeConnections();
+            }
+        }
+        return list;
+    }
 
     public boolean insertRecord(String creator, String patientID, String status) {
         boolean kt = true;
@@ -117,105 +173,24 @@ public class DAO {
         return dto;
     }
 
-    public List<SurgeryRecordDTO> searchLikeName(String search) {
-        List<SurgeryRecordDTO> list = null;
-        try {
-            conn = connections.MyConnection.getConnection();
-            String sql = "select PatientID from Patient where PatientName like ?";
-            preSt = conn.prepareStatement(sql);
-            preSt.setString(1, "%" + search + "%");
-            rs = preSt.executeQuery();
-            List<String> id = new ArrayList<>();
-            while (rs.next()) {
-                id.add(rs.getString("PatientID"));
-            }
-            rs.close();
-            preSt.close();
-            if (id.size() > 0) {
-                sql = "select * from SurgeryReport where PatientID=?";
-                preSt = conn.prepareStatement(sql);
-                SurgeryRecordDTO dto;
-                for (String s : id) {
-                    preSt.setString(1, s);
-                    rs = preSt.executeQuery();
-                    while (rs.next()) {
-                        if (list == null) {
-                            list = new ArrayList<>();
-                        }
-                        dto = new SurgeryRecordDTO();
-                        dto.setId(rs.getString(1));
-                        dto.setProcess(rs.getString(2));
-                        dto.setTimeStart(rs.getTimestamp(3));
-                        dto.setTimeEnd(rs.getTimestamp(4));
-                        dto.setCreator_emp(rs.getString(5));
-                        dto.setTimeCreate(rs.getTimestamp(6));
-                        dto.setStatus(rs.getString(7));
-                        dto.setPatientID(rs.getString(8));
-                        dto.setSurgeryName(rs.getString(9));
-                        dto.setOperatedDoctor(rs.getString(10));
-                        dto.setAnesthesiologist(rs.getString(11));
-                        dto.setPatientName(findPFullname(s));
-                        list.add(dto);
-                    }
-                    rs.close();
-                    preSt.close();
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            closeConnections();
-        }
-        return list;
-    }
-
-    public SurgeryRecordDTO findSRByPK(String pk) {
-        SurgeryRecordDTO dto = null;
-        try {
-            conn = connections.MyConnection.getConnection();
-            String sql = "select * from SurgeryReport where Surgery_Record_ID=?";
-            preSt = conn.prepareStatement(sql);
-            preSt.setString(1, pk);
-            rs = preSt.executeQuery();
-            if (rs.next()) {
-                dto = new SurgeryRecordDTO();
-                dto.setId(rs.getString(1));
-                dto.setProcess(rs.getString(2));
-                dto.setTimeStart(rs.getTimestamp(3));
-                dto.setTimeEnd(rs.getTimestamp(4));
-                dto.setCreator_emp(rs.getString(5));
-                dto.setTimeCreate(rs.getTimestamp(6));
-                dto.setStatus(rs.getString(7));
-                dto.setPatientID(rs.getString(8));
-                dto.setSurgeryName(rs.getString(9));
-                dto.setOperatedDoctor(rs.getString(10));
-                dto.setAnesthesiologist(rs.getString(11));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            closeConnections();
-        }
-        return dto;
-    }
-
     public PatientDTO findPatientByPK(String pk) {
         PatientDTO dto = null;
         try {
             conn = connections.MyConnection.getConnection();
-            String sql = "select * from Patient where PatientID=?";
+            String sql = "select PatientName,PatientAddr,DOB,Email,Gender,PatientPass,Phone,Status"
+                    + " from Patient where PatientID=?";
             preSt = conn.prepareStatement(sql);
             preSt.setString(1, pk);
             rs = preSt.executeQuery();
             if (rs.next()) {
                 dto = new PatientDTO();
                 dto.setId(pk);
-                dto.setName(rs.getString(pname));
-                dto.setAddress(rs.getString(paddress));
+                dto.setName(rs.getString("PatientName"));
+                dto.setAddress(rs.getString("PatientAddr"));
                 dto.setDOB(rs.getTimestamp("DOB"));
                 dto.setEmail(rs.getString("Email"));
                 dto.setGender(rs.getBoolean("Gender"));
-                dto.setPass(rs.getString(ppass));
+                dto.setPass(rs.getString("PatientPass"));
                 dto.setPhone(rs.getString("Phone"));
                 dto.setStatus(rs.getString("Status"));
             }

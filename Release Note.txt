@@ -1,0 +1,16 @@
+*** Simple-Hostpital-webServer v1.1 ***
+* Bug fix
+- SQL exception about ResultSet is closed while searching Surgery Record base on 
+Patient Name
+* Bussiness logic fix:
+- Surgery status change to given option list(On hold, Done)
+- Boundary for EmployeeID: Axxx(x is digits)
+- Date value can't be after the current time
+- Surgery Record Time Of Start must before Surgery Record Time Of End
+* Changes:
+- Slit SearchLikeName into searchPatientLikeName & searchSurgery for better context
+* next update expectations:
+- Classes are contextual named
+- Move methods to correct context DAO classes(R-DAO and W-DAO)
+- Comment code
+       ======= livjng4k =======
