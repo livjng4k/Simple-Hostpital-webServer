@@ -28,7 +28,6 @@ public class UpdatePatientAction extends org.apache.struts.action.Action {
             DAO dao = new DAO();
             PatientDTO dto = dao.findPatientByPK(bean.getId());
             session.removeAttribute("info");
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             session.setAttribute("info", dto);
         } else {
             session.setAttribute("message", "Update failed.");

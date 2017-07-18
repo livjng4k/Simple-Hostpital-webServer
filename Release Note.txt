@@ -1,3 +1,8 @@
+*** Simple-Hostpital-webServer v1.1.1 ***
+*Bug fix: 
+- Patient's gender update dosen't work
+       ======= livjng4k =======
+
 *** Simple-Hostpital-webServer v1.1 ***
 * Bug fix
 - SQL exception about ResultSet is closed while searching Surgery Record base on 

@@ -11,14 +11,13 @@ import org.apache.struts.action.ActionMessage;
 
 public class PatientUpdateForm extends org.apache.struts.action.ActionForm {
 
-    private String id, name, address, email, phone;
-    private boolean gender;
+    private String id, name, address, email, phone,gender;
     private String dob;
 
     public boolean update() {
         WDAO dao = new WDAO();
         Timestamp ts = Timestamp.valueOf(dob + " 00:00:00");
-        return dao.updatePatientInfo(id, name, gender, ts, address, email, phone);
+        return dao.updatePatientInfo(id, name, gender.equals("Male"), ts, address, email, phone);
     }
 
     public String getDob() {
@@ -69,11 +68,11 @@ public class PatientUpdateForm extends org.apache.struts.action.ActionForm {
         this.phone = phone;
     }
 
-    public boolean isGender() {
+    public String getGender() {
         return gender;
     }
 
-    public void setGender(boolean gender) {
+    public void setGender(String gender) {
         this.gender = gender;
     }
 
