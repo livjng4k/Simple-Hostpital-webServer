@@ -1,6 +1,15 @@
+*** Simple-Hostpital-webServer v1.2 ***
+*Updated
+- Project name
+- Add comment for clarification
+- Change file .java name to unified 
+       ======= livjng4k =======
+
 *** Simple-Hostpital-webServer v1.1.1 ***
 *Bug fix: 
 - Patient's gender update dosen't work
+*Bussiness Logic updated:
+- Employees can only update record on their creation.
        ======= livjng4k =======
 
 *** Simple-Hostpital-webServer v1.1 ***
@@ -9,7 +18,7 @@
 Patient Name
 * Bussiness logic fix:
 - Surgery status change to given option list(On hold, Done)
-- Boundary for EmployeeID: Axxx(x is digits)
+- Boundary for EmployeeID: Exxx(x is digits)
 - Date value can't be after the current time
 - Surgery Record Time Of Start must before Surgery Record Time Of End
 * Changes:
